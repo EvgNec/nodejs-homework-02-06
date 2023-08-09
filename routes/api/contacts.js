@@ -9,11 +9,14 @@ const { HttpError } = require("../../helpers");
 
 const addSchema = Joi.object({
   name: Joi.string().required(),
-  email: Joi.string().email({
-    minDomainSegments: 2,
-    tlds: { allow: ["com", "net"] },
-  }).required(),
-  phone: Joi.string().pattern(/^[0-9]+$/, "numbers").required(),
+  email: Joi.string().required(),
+  phone: Joi.string().required(),
+});
+
+const addSchemaPut = Joi.object({
+  name: Joi.string(),
+  email: Joi.string(),
+  phone: Joi.string(),
 });
 
 router.get("/", async (req, res, next) => {
@@ -80,7 +83,7 @@ router.delete("/:contactId", async (req, res, next) => {
 
 router.put("/:contactId", async (req, res, next) => {
     try {
-    const { err } = addSchema.validate(req.body);
+    const { err } = addSchemaPut.validate(req.body);
     if (err) {
       throw HttpError(400, err.message);
     }
